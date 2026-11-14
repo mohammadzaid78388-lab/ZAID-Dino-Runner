@@ -1,0 +1,30 @@
+name: Build ZAID Dino Runner APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get project files
+        uses: actions/checkout@v4
+
+      - name: Build Android APK
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          workdir: .
+          buildozer_version: stable
+
+      - name: Save APK for download
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZAID-Dino-Runner-APK
+          path: ${{ steps.buildozer.outputs.filename }}
+          if-no-files-found: error
